@@ -35,7 +35,7 @@ impl EventHandler for Handler {
                 let data = CreateInteractionResponseMessage::new().content(content);
                 let builder = CreateInteractionResponse::Message(data);
                 if let Err(why) = command.create_response(&ctx.http, builder).await {
-                    println!("Cannot respond to slash command: {why}");
+                    println!("응답할 수 없음: {why}");
                 }
             }
         }
@@ -54,6 +54,6 @@ async fn main() {
         .expect("클라이언트 생성 실패");
 
     if let Err(why) = client.start().await {
-        println!("클라이언트 오류: {:?}", why);
+        println!("클라이언트 오류: {why}");
     }
 }
