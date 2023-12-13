@@ -1,5 +1,4 @@
-use crate::models::{NewUser, User};
-use crate::schema::users::dsl::users;
+use crate::models::{NewUser};
 use diesel::prelude::*;
 use mowgli::establish_connection;
 

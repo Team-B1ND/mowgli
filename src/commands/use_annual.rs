@@ -16,7 +16,7 @@ pub async fn run(ctx: &Context,
         create_annual(id);
         let name = &user.name;
         let annual = read_annual(id).unwrap_or(0);
-        let value = annual-(*count as i32);
+        let value = annual-*count as i32;
         update_annual(id, value);
         CreateEmbed::new()
             .title(format!("연차 {count}개를 사용하셨습니다."))

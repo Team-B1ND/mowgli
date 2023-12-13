@@ -3,7 +3,6 @@ use serenity::model::application::{CommandOptionType, ResolvedOption, ResolvedVa
 use serenity::model::Colour;
 use serenity::prelude::Context;
 use crate::bin::create_annual::create_annual;
-use crate::bin::read_annual::read_annual;
 use crate::bin::update_annual::update_annual;
 
 pub async fn run(ctx: &Context,
@@ -18,11 +17,9 @@ pub async fn run(ctx: &Context,
             let id = i64::from(user.id);
             create_annual(id);
             let name = &user.name;
-            let annual = read_annual(id).unwrap_or(0);
-            let value = annual+1;
-            update_annual(id, value);
+            update_annual(id, *count as i32);
             CreateEmbed::new()
-                .title(format!("{name}님의 연차는 이제 {value}개 입니다."))
+                .title(format!("{name}님의 연차는 이제 {count}개 입니다."))
                 .color(Colour::new(0x5E311F))
         } else {
             CreateEmbed::new()

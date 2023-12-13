@@ -19,7 +19,7 @@ pub async fn run(ctx: &Context,
         id = user.id;
         name = &user.name;
     }
-    let id_int = i64::from(user.id);
+    let id_int = i64::from(id);
     create_annual(id_int);
     let annual = read_annual(id_int).unwrap_or(0);
     CreateEmbed::new()
