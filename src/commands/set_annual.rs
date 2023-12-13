@@ -6,7 +6,14 @@ pub fn run(options: &[ResolvedOption]) -> String {
                     value: ResolvedValue::User(user, _), ..
                 }) = options.first()
     {
-        format!("{} 바보", user.name)
+        if let Some(ResolvedOption {
+                        value: ResolvedValue::Integer(count), ..
+                    }) = options.last()
+        {
+            format!("SCANNED ID: {}, SCANNED NUMBER: {}", user.id, count)
+        } else {
+            "설정할 연차의 수를 입력해주세요.".to_string()
+        }
     } else {
         "올바른 유저가 아닙니다.".to_string()
     }

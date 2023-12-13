@@ -1,13 +1,12 @@
-use serenity::all::{CommandOptionType, CreateCommandOption, ResolvedValue};
-use serenity::builder::CreateCommand;
-use serenity::model::application::ResolvedOption;
+use serenity::builder::{CreateCommand, CreateCommandOption};
+use serenity::model::application::{CommandOptionType, ResolvedOption, ResolvedValue};
 
 pub fn run(options: &[ResolvedOption]) -> String {
     if let Some(ResolvedOption {
                     value: ResolvedValue::User(user, _), ..
                 }) = options.first()
     {
-        format!("{} 바보", user.name)
+        format!("SCANNED ID: {}", user.id)
     } else {
         "올바른 유저가 아닙니다.".to_string()
     }
