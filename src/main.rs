@@ -7,7 +7,8 @@ use std::env;
 use dotenv::dotenv;
 
 use serenity::async_trait;
-use serenity::builder::{CreateInteractionResponse, CreateInteractionResponseMessage};
+use serenity::builder::{CreateInteractionResponse, CreateInteractionResponseMessage, CreateEmbed};
+use serenity::model::Colour;
 use serenity::model::application::{Command, Interaction};
 use serenity::model::gateway::Ready;
 use serenity::prelude::*;
@@ -32,18 +33,30 @@ impl EventHandler for Handler {
     async fn interaction_create(&self, ctx: Context, interaction: Interaction) {
         if let Interaction::Command(command) = interaction {
             let content = match command.data.name.as_str() {
-                "연차확인" => Some(commands::get_annual::run(&ctx, &command.data.options())),
-                "연차설정" => Some(commands::set_annual::run(&ctx, &command.data.options())),
-                "연차사용" => Some(commands::use_annual::run(&ctx, &command.data.options())),
-                _ => Some("없는 명령어입니다.".to_string()),
+                "연차확인" => {
+                    commands::get_annual::run(&ctx, &command.data.options())
+                        .await
+                }
+                "연차설정" => {
+                    commands::set_annual::run(&ctx, &command.data.options())
+                        .await
+                }
+                "연차사용" => {
+                    commands::use_annual::run(&ctx, &command.data.options())
+                        .await
+                }
+                _ => {
+                    CreateEmbed::new()
+                        .title("없는 명령어입니다!")
+                        .color(Colour::new(0xFF0000))
+                }
             };
 
-            if let Some(content) = content {
-                let data = CreateInteractionResponseMessage::new().content(content);
-                let builder = CreateInteractionResponse::Message(data);
-                if let Err(why) = command.create_response(&ctx.http, builder).await {
-                    println!("응답할 수 없습니다: {why}");
-                }
+            let data = CreateInteractionResponseMessage::new()
+                .add_embed(content);
+            let builder = CreateInteractionResponse::Message(data);
+            if let Err(why) = command.create_response(&ctx.http, builder).await {
+                println!("응답할 수 없습니다: {why}");
             }
         }
     }

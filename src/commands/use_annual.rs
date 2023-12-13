@@ -1,8 +1,10 @@
-use serenity::builder::{CreateCommand, CreateCommandOption};
-use serenity::model::application::{CommandOptionType, ResolvedOption, ResolvedValue};
+use serenity::builder::{CreateCommand, CreateCommandOption, CreateEmbed};
+use serenity::model::Colour;
+use serenity::model::application::{CommandOptionType, ResolvedOption};
 use serenity::prelude::Context;
 
-pub fn run(ctx: &Context, options: &[ResolvedOption]) -> String {
+pub async fn run(ctx: &Context,
+                 options: &[ResolvedOption<'_>]) -> CreateEmbed {
     if let Some(ResolvedOption {
                     value: ResolvedValue::Integer(count), ..
                 }) = options.first()
@@ -11,6 +13,10 @@ pub fn run(ctx: &Context, options: &[ResolvedOption]) -> String {
     } else {
         "1과 2 사이의 숫자를 입력해주세요.".to_string()
     }
+    CreateEmbed::new()
+        .title("This is a title")
+        .description("This is a description")
+        .color(Colour::new(0x5E311F))
 }
 
 pub fn register() -> CreateCommand {

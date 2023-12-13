@@ -1,8 +1,10 @@
-use serenity::builder::{CreateCommand, CreateCommandOption};
-use serenity::model::application::{CommandOptionType, ResolvedOption, ResolvedValue};
+use serenity::builder::{CreateCommand, CreateCommandOption, CreateEmbed};
+use serenity::model::application::{CommandOptionType, ResolvedOption};
+use serenity::model::Colour;
 use serenity::prelude::Context;
 
-pub fn run(ctx: &Context, options: &[ResolvedOption]) -> String {
+pub async fn run(ctx: &Context,
+                 options: &[ResolvedOption<'_>]) -> CreateEmbed {
     if let Some(ResolvedOption {
                     value: ResolvedValue::User(user, _), ..
                 }) = options.first()
@@ -18,6 +20,10 @@ pub fn run(ctx: &Context, options: &[ResolvedOption]) -> String {
     } else {
         "올바른 유저가 아닙니다.".to_string()
     }
+    CreateEmbed::new()
+        .title("This is a title")
+        .description("This is a description")
+        .color(Colour::new(0x5E311F))
 }
 
 pub fn register() -> CreateCommand {

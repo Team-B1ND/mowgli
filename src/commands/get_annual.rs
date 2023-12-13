@@ -1,18 +1,28 @@
-use serenity::builder::{CreateCommand, CreateCommandOption};
+use serenity::builder::{CreateCommand, CreateCommandOption, CreateEmbed};
 use serenity::model::application::{CommandOptionType, ResolvedOption, ResolvedValue};
+use serenity::model::Colour;
 use serenity::prelude::Context;
 use crate::bin::create_annual::create_annual;
+use crate::bin::read_annual::read_annual;
 
-pub fn run(ctx: &Context, options: &[ResolvedOption]) -> String {
+pub async fn run(ctx: &Context,
+                 options: &[ResolvedOption<'_>]) -> CreateEmbed {
+    let id;
     if let Some(ResolvedOption {
                     value: ResolvedValue::User(user, _), ..
                 }) = options.first()
     {
-        create_annual(user.id.to_string().parse().unwrap());
-        format!("SCANNED ID: {}", user.id)
+        id = user.id;
     } else {
-        "올바른 유저가 아닙니다.".to_string()
+        id = ctx.http.get_current_user().await.unwrap().id;
     }
+    let id_int = id.to_string().parse().unwrap();
+    create_annual(id_int);
+    let annual = read_annual(id_int).unwrap_or(0);
+    CreateEmbed::new()
+        .title("This is a title")
+        .description("This is a description")
+        .color(Colour::new(0x5E311F))
 }
 
 pub fn register() -> CreateCommand {
