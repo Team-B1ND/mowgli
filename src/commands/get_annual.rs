@@ -1,8 +1,9 @@
 use serenity::builder::{CreateCommand, CreateCommandOption};
 use serenity::model::application::{CommandOptionType, ResolvedOption, ResolvedValue};
+use serenity::prelude::Context;
 use crate::bin::create_annual::create_annual;
 
-pub fn run(options: &[ResolvedOption]) -> String {
+pub fn run(ctx: &Context, options: &[ResolvedOption]) -> String {
     if let Some(ResolvedOption {
                     value: ResolvedValue::User(user, _), ..
                 }) = options.first()

@@ -1,7 +1,8 @@
 use serenity::builder::{CreateCommand, CreateCommandOption};
 use serenity::model::application::{CommandOptionType, ResolvedOption, ResolvedValue};
+use serenity::prelude::Context;
 
-pub fn run(options: &[ResolvedOption]) -> String {
+pub fn run(ctx: &Context, options: &[ResolvedOption]) -> String {
     if let Some(ResolvedOption {
                     value: ResolvedValue::User(user, _), ..
                 }) = options.first()
