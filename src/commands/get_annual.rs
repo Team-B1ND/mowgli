@@ -1,10 +1,20 @@
+use serenity::all::{CommandOptionType, CreateCommandOption, ResolvedValue};
 use serenity::builder::CreateCommand;
 use serenity::model::application::ResolvedOption;
 
-pub fn run(_options: &[ResolvedOption]) -> String {
-    "반가워!".to_string()
+pub fn run(options: &[ResolvedOption]) -> String {
+    if let Some(ResolvedOption {
+                    value: ResolvedValue::User(user, _), ..
+                }) = options.first()
+    {
+        format!("{} 바보", user.name)
+    } else {
+        "올바른 유저가 아닙니다.".to_string()
+    }
 }
 
 pub fn register() -> CreateCommand {
-    CreateCommand::new("안녕").description("모글리가 인사합니다.")
+    CreateCommand::new("연차확인").description("연차를 확인합니다.").add_option(
+        CreateCommandOption::new(CommandOptionType::User, "사용자", "연차를 확인할 사용자"),
+    )
 }

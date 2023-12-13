@@ -20,7 +20,7 @@ impl EventHandler for Handler {
 
         Command::set_global_commands(&ctx.http, vec![
             commands::get_annual::register(),
-            commands::give_annual::register(),
+            commands::set_annual::register(),
             commands::use_annual::register(),
         ])
             .await
@@ -29,8 +29,8 @@ impl EventHandler for Handler {
     async fn interaction_create(&self, ctx: Context, interaction: Interaction) {
         if let Interaction::Command(command) = interaction {
             let content = match command.data.name.as_str() {
-                "연차확인" => Some(commands::use_annual::run(&command.data.options())),
-                "연차지급" => Some(commands::use_annual::run(&command.data.options())),
+                "연차확인" => Some(commands::get_annual::run(&command.data.options())),
+                "연차설정" => Some(commands::set_annual::run(&command.data.options())),
                 "연차사용" => Some(commands::use_annual::run(&command.data.options())),
                 _ => Some("없는 명령어입니다 :(".to_string()),
             };

@@ -1,0 +1,4 @@
+CREATE TABLE users (
+  id INT PRIMARY KEY NOT NULL,
+  annual INT NOT NULL
+)
