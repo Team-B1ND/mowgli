@@ -1,4 +1,7 @@
+mod bin;
 mod commands;
+mod models;
+mod schema;
 
 use std::env;
 use dotenv::dotenv;
@@ -24,7 +27,7 @@ impl EventHandler for Handler {
             commands::use_annual::register(),
         ])
             .await
-            .expect("명령 생성 실패");
+            .expect("명령 생성에 실패했습니다.");
     }
     async fn interaction_create(&self, ctx: Context, interaction: Interaction) {
         if let Interaction::Command(command) = interaction {
@@ -32,14 +35,14 @@ impl EventHandler for Handler {
                 "연차확인" => Some(commands::get_annual::run(&command.data.options())),
                 "연차설정" => Some(commands::set_annual::run(&command.data.options())),
                 "연차사용" => Some(commands::use_annual::run(&command.data.options())),
-                _ => Some("없는 명령어입니다 :(".to_string()),
+                _ => Some("없는 명령어입니다.".to_string()),
             };
 
             if let Some(content) = content {
                 let data = CreateInteractionResponseMessage::new().content(content);
                 let builder = CreateInteractionResponse::Message(data);
                 if let Err(why) = command.create_response(&ctx.http, builder).await {
-                    println!("응답할 수 없음: {why}");
+                    println!("응답할 수 없습니다: {why}");
                 }
             }
         }
@@ -49,15 +52,15 @@ impl EventHandler for Handler {
 #[tokio::main]
 async fn main() {
     dotenv().ok();
-    let token = env::var("TOKEN").expect(".env 파일에 토큰 없음");
+    let token = env::var("TOKEN").expect(".env 파일에 토큰이 없습니다.");
 
     let intents = GatewayIntents::non_privileged() | GatewayIntents::MESSAGE_CONTENT;
     let mut client = Client::builder(token, intents)
         .event_handler(Handler)
         .await
-        .expect("클라이언트 생성 실패");
+        .expect("클라이언트 생성에 실패했습니다.");
 
     if let Err(why) = client.start().await {
-        println!("클라이언트 오류: {why}");
+        println!("클라이언트 오류가 발생했습니다: {why}");
     }
 }

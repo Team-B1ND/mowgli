@@ -2,7 +2,7 @@
 
 diesel::table! {
     users (id) {
-        id -> Integer,
+        id -> BigInt,
         annual -> Integer,
     }
 }

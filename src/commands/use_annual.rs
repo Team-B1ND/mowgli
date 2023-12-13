@@ -13,10 +13,12 @@ pub fn run(options: &[ResolvedOption]) -> String {
 }
 
 pub fn register() -> CreateCommand {
-    CreateCommand::new("연차사용").description("연차를 사용합니다.").add_option(
-        CreateCommandOption::new(CommandOptionType::Integer, "연차", "사용할 연차의 수")
-            .required(true)
-            .min_int_value(1)
-            .max_int_value(2),
-    )
+    CreateCommand::new("연차사용")
+        .description("연차를 사용합니다.")
+        .add_option(
+            CreateCommandOption::new(CommandOptionType::Integer, "연차", "사용할 연차의 수")
+                .required(true)
+                .min_int_value(1)
+                .max_int_value(2),
+        )
 }
