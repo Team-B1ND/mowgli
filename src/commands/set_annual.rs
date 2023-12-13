@@ -1,29 +1,39 @@
 use serenity::builder::{CreateCommand, CreateCommandOption, CreateEmbed};
-use serenity::model::application::{CommandOptionType, ResolvedOption};
+use serenity::model::application::{CommandOptionType, ResolvedOption, ResolvedValue};
 use serenity::model::Colour;
 use serenity::prelude::Context;
+use crate::bin::create_annual::create_annual;
+use crate::bin::read_annual::read_annual;
+use crate::bin::update_annual::update_annual;
 
 pub async fn run(ctx: &Context,
                  options: &[ResolvedOption<'_>]) -> CreateEmbed {
     if let Some(ResolvedOption {
                     value: ResolvedValue::User(user, _), ..
-                }) = options.first()
-    {
+                }) = options.first() {
         if let Some(ResolvedOption {
                         value: ResolvedValue::Integer(count), ..
-                    }) = options.last()
-        {
-            format!("SCANNED ID: {}, SCANNED NUMBER: {}", user.id, count)
+                    }) = options.last() {
+
+            let id = i64::from(user.id);
+            create_annual(id);
+            let name = &user.name;
+            let annual = read_annual(id).unwrap_or(0);
+            let value = annual+1;
+            update_annual(id, value);
+            CreateEmbed::new()
+                .title(format!("{name}님의 연차는 이제 {value}개 입니다."))
+                .color(Colour::new(0x5E311F))
         } else {
-            "설정할 연차의 수를 입력해주세요.".to_string()
+            CreateEmbed::new()
+                .title("설정할 연차의 수를 입력해주세요!")
+                .color(Colour::new(0xFF0000))
         }
     } else {
-        "올바른 유저가 아닙니다.".to_string()
+        CreateEmbed::new()
+            .title("올바른 유저가 아닙니다!")
+            .color(Colour::new(0xFF0000))
     }
-    CreateEmbed::new()
-        .title("This is a title")
-        .description("This is a description")
-        .color(Colour::new(0x5E311F))
 }
 
 pub fn register() -> CreateCommand {
